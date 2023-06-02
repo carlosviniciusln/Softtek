@@ -12,7 +12,6 @@ public class Program
 
         var serviceMatches = services.GetService<IFootballMatchesService>();
 
-
         string teamName = "Paris Saint-Germain";
         int year = 2013;
         int totalGoals = serviceMatches.totalGoals(teamName,year).Result;

@@ -1,4 +1,5 @@
 using MediatR;
+using Questao5.Domain.Handlers;
 using Questao5.Infrastructure.Sqlite;
 using System.Reflection;
 
@@ -36,6 +37,8 @@ app.MapControllers();
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
 app.Services.GetService<IDatabaseBootstrap>().Setup();
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
+
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.Run();
 

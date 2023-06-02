@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Questao1.models
 {
@@ -6,6 +7,7 @@ namespace Questao1.models
         internal int conta { get; set; }
         internal string titular { get; set; }
         internal double? saldo { get; set; } = 0;
+        [DataType(DataType.Currency)]
         internal double taxa { get; set; } = 3.50;
 
         internal ContaBancaria(int numero, string nomeTitular, double? depositoInicial = 0.00)
