@@ -7,8 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
-
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
+
 
 // sqlite
 builder.Services.AddSingleton(new DatabaseConfig { Name = builder.Configuration.GetValue<string>("DatabaseName", "Data Source=database.sqlite") });
@@ -38,7 +38,8 @@ app.MapControllers();
 app.Services.GetService<IDatabaseBootstrap>().Setup();
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
 
-app.UseMiddleware<ErrorHandlingMiddleware>();
+// middleware para tratamento de exceptions
+app.UseMiddleware<ExceptionHandler>();
 
 app.Run();
 

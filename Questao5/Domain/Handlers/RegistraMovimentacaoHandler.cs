@@ -11,23 +11,17 @@ namespace Questao5.Domain.Handlers
 
         public async Task<RegistraMovimentacaoResponse> Handle(RegistraMovimentacaoRequest request, CancellationToken cancellationToken)
         {
-            try
+            if (_validation.IsValid(request))
             {
-                if (_validation.IsValid(request))
-                {
                        
-                }
-                var idRequest = Guid.NewGuid();
-                var response = new RegistraMovimentacaoResponse
-                {
-                    Id = idRequest
-                };
-                return await Task.FromResult(response);
             }
-            catch (Exception)
+            var idRequest = Guid.NewGuid();
+            var response = new RegistraMovimentacaoResponse
             {
-                throw;
-            }
+                Id = idRequest
+            };
+
+            return await Task.FromResult(response);
         }
     }
 }

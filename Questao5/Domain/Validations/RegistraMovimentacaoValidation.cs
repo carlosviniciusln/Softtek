@@ -1,4 +1,5 @@
-﻿using Questao5.Domain.Commands.Requests;
+﻿using Questao5.Application.Configurations.Helpers;
+using Questao5.Domain.Commands.Requests;
 using Questao5.Domain.Enumerators;
 
 namespace Questao5.Domain.Validations
@@ -22,15 +23,15 @@ namespace Questao5.Domain.Validations
         {
             if (request.IdConta == null)
             {
-                throw new Exception("IdContaException");
+                throw new ContaNaoInformadaException();
             }
             else if (request.Valor == null)
             {
-                throw new Exception("ValorException");
+                throw new ValorNaoInformadoException();
             }
             else if (request.Tipo == null)
             {
-                throw new Exception("TipoException");
+                throw new TipoNaoInformadoException();
             }
             else
             {
@@ -48,7 +49,7 @@ namespace Questao5.Domain.Validations
             }
             else
             {
-                throw new Exception("ValorInvalidoException");
+                throw new ValorInvalidoException();
             }
 
             return isValid;
@@ -62,7 +63,7 @@ namespace Questao5.Domain.Validations
             }
             else
             {
-                throw new Exception("TipoMovimentacaoInvalidaException");
+                throw new TipoMovimentacaoInvalidaException();
             }
 
             return isValid;
@@ -76,7 +77,7 @@ namespace Questao5.Domain.Validations
             }
             else
             {
-                throw new Exception("ContaMovimentacaoInvalidaException");
+                throw new ContaMovimentacaoInvalidaException();
             }
 
             return isValid;

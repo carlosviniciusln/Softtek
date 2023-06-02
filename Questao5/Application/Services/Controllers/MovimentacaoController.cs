@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Questao5.Domain.Commands.Requests;
 using Questao5.Domain.Commands.Responses;
-using Questao5.Domain.Handlers;
+using Questao5.Application.Configurations.Helpers;
 
 namespace Questao5.Application.Services.Controllers
 {
@@ -13,7 +13,7 @@ namespace Questao5.Application.Services.Controllers
         [HttpPost]
         [Route("")]
         [ProducesResponseType(typeof(RegistraMovimentacaoResponse), 200)]
-        [ProducesResponseType(typeof(ErrorHandler), 400)]
+        [ProducesResponseType(typeof(ErrorResponse), 400)]
         public Task<RegistraMovimentacaoResponse> Register(
             [FromServices] IMediator mediator,
             [FromBody] RegistraMovimentacaoRequest command
