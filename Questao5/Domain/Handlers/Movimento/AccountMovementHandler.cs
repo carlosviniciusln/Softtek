@@ -30,17 +30,18 @@ namespace Questao5.Domain.Handlers.Movimento
             var response = new ResponseAccountMovementCommand();
             response.Id = Guid.NewGuid();
 
-            /*1. check if idempotencia exists*/
+            /*1. check if idempotencia exists */
             var previousResult = await _dbIdempotenciaCommand.GetByIdAsync(request.IdIdempotencia);
 
-            /*2. if previousResult, return this result*/
+            /*2. if previousResult, return this result */
             if (previousResult == null)
             {
                 var account = await getContaCorrenteAsync(request.IdConta);
-                /*3. Validations*/
+                /*3. Validations */
                 if (_validation.IsValidForAccountMovement(request, account))
-                {
+                {   /*4. Register Movement*/
                     addMovement(buildMovement(request, response));
+                    /*5. Register idempotencia*/
                     addIdempotenciaAsync(convertIdempotencia(request, response));
                     return await Task.FromResult(convertJson(response));
                 }
@@ -89,11 +90,6 @@ namespace Questao5.Domain.Handlers.Movimento
             };
         }
 
-        private async void addMovement(ResponseMovimentoCommand request)
-        {
-            await _dbMovimentoCommand.AddAsync(request);
-        }
-
         private string convertJson(ResponseAccountMovementCommand response)
         {
             var jsonOptions = new JsonSerializerOptions
@@ -104,7 +100,12 @@ namespace Questao5.Domain.Handlers.Movimento
             };
             var json = JsonSerializer.Serialize(response, jsonOptions);
             return json;
-        } 
+        }
+
+        private async void addMovement(ResponseMovimentoCommand request)
+        {
+            await _dbMovimentoCommand.AddAsync(request);
+        }
 
         private async Task<ResponseContaCorrenteCommand> getContaCorrenteAsync(string idConta)
         {

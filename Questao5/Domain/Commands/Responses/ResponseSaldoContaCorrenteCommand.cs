@@ -8,6 +8,6 @@ namespace Questao5.Domain.Commands.Responses
         public string Nome { get; set; }
         public DateTime DataHora { get; set; }
         [DataType(DataType.Currency)]
-        public decimal Saldo { get; set; }
+        public string Saldo { get; set; }
     }
 }

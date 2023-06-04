@@ -80,7 +80,7 @@ namespace Questao1 {
 
         private static string montaResposta(ContaBancaria conta)
         {
-            return ("Conta " + conta.conta + ", Titular: " + conta.titular + ", Saldo: $ " + conta.saldo);
+            return ("Conta " + conta.Conta + ", Titular: " + conta.Titular + ", Saldo: $ " + conta.Saldo?.ToString("F2"));
         }
     }
 }

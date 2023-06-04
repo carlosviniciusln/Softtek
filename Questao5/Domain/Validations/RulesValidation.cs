@@ -30,7 +30,7 @@ namespace Questao5.Domain.Validations
         ///</summary>
         private static bool ValidateInputRegisteredAccount(ResponseContaCorrenteCommand account)
         {
-            if(account.IdContaCorrente != null)
+            if(account != null)
             {
                 isValid = true;
             }
@@ -61,7 +61,7 @@ namespace Questao5.Domain.Validations
         ///</summary>
         private static bool ValidateInputTipoMovimentacao(RequestAccountMovementCommand request)
         {
-            if (request.Tipo == TipoMovimentacaoEnum.C.ToString() || request.Tipo == TipoMovimentacaoEnum.D.ToString())
+            if (request.Tipo.Equals(TipoMovimentacaoEnum.C.ToString()) || request.Tipo.Equals(TipoMovimentacaoEnum.D.ToString()))
             {
                 isValid = true;
             }

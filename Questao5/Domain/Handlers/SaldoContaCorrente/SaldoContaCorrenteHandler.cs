@@ -2,6 +2,7 @@
 using Questao5.Domain.Commands.Requests;
 using Questao5.Domain.Commands.Response;
 using Questao5.Domain.Commands.Responses;
+using Questao5.Domain.Enumerators;
 using Questao5.Domain.Validations;
 using Questao5.Infrastructure.Database.CommandStore.ContaCorrente;
 using Questao5.Infrastructure.Database.CommandStore.Movimento;
@@ -24,8 +25,6 @@ namespace Questao5.Domain.Handlers.SaldoContaCorrente
 
         public async Task<string> Handle(RequestSaldoContaCorrenteCommand request, CancellationToken cancellationToken)
         {
-            var response = new ResponseSaldoContaCorrenteCommand();
-
             var account = await getContaCorrenteAsync(request.IdContaCorrente);
             var movements = new RequestAccountMovementCommand { IdConta = request.IdContaCorrente };
             /*1. Validations*/
@@ -34,7 +33,7 @@ namespace Questao5.Domain.Handlers.SaldoContaCorrente
                 /*2. Get all movements from account*/
                 var allMovements = getAllMovements(movements);
                 var saldo = calculateTransactions(allMovements.Result);
-                return await Task.FromResult(convertJson(response));
+                return await Task.FromResult(convertJson(buildResponse(request, account, saldo)));
             }
             else
             {
@@ -43,6 +42,16 @@ namespace Questao5.Domain.Handlers.SaldoContaCorrente
         }
 
         #region private functions
+        private static ResponseSaldoContaCorrenteCommand buildResponse(RequestSaldoContaCorrenteCommand request, ResponseContaCorrenteCommand account, decimal saldo)
+        {
+            return new ResponseSaldoContaCorrenteCommand
+            {
+                DataHora = DateTime.Now,
+                Saldo = saldo.ToString("F2"),
+                IdContaCorrente = request.IdContaCorrente,
+                Nome = account.Nome
+            };
+        }
         private string convertJson(ResponseSaldoContaCorrenteCommand response)
         {
             var jsonOptions = new JsonSerializerOptions
@@ -67,8 +76,22 @@ namespace Questao5.Domain.Handlers.SaldoContaCorrente
 
         private decimal calculateTransactions(IEnumerable<ResponseMovimentoCommand> allMovements)
         {
-            var exemplo = allMovements;
-            return 0;
+            decimal credito = 0;
+            decimal debito = 0;
+
+            foreach (var movement in allMovements)
+            {
+                if (movement.TipoMovimento.Equals(TipoMovimentacaoEnum.C.ToString()))
+                {
+                    credito += movement.Valor;
+                }
+                else
+                {
+                    debito += movement.Valor;
+                }
+
+            }
+            return credito - debito;
         }
         #endregion
     }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Questao5.Application.Configurations.Helpers;
 using Questao5.Domain.Commands.Requests;
+using Questao5.Domain.Commands.Responses;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Questao5.Application.Services.Controllers
@@ -22,7 +23,7 @@ namespace Questao5.Application.Services.Controllers
         [SwaggerResponse(417, CustomResponseMessages.Response6)]
         [SwaggerResponse(500, CustomResponseMessages.Response6)] 
         #endregion
-        public Task<string> Register(
+        public Task<ResponseAccountMovementCommand> Register(
             [FromServices] IMediator mediator,
             [FromBody] RequestAccountMovementCommand command
             )

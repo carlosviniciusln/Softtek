@@ -4,28 +4,27 @@ using System.ComponentModel.DataAnnotations;
 namespace Questao1.models
 {
     internal class ContaBancaria {
-        internal int conta { get; set; }
-        internal string titular { get; set; }
-        internal double? saldo { get; set; } = 0;
-        [DataType(DataType.Currency)]
-        internal double taxa { get; set; } = 3.50;
+        internal int Conta { get; set; }
+        internal string Titular { get; set; }
+        internal double? Saldo { get; set; } = 0;
+        internal double Taxa { get; set; } = 3.50;
 
         internal ContaBancaria(int numero, string nomeTitular, double? depositoInicial = 0.00)
         {
-            conta = numero;
-            titular = nomeTitular;
-            saldo = depositoInicial;
+            Conta = numero;
+            Titular = nomeTitular;
+            Saldo = depositoInicial;
         }
 
         internal double? Deposito(double quantia){
-            return saldo = saldo + quantia;
+            return Saldo = Saldo + quantia;
         }
 
         internal double? Saque(double quantia)
         {
-            if (quantia < saldo)
+            if (quantia < Saldo)
             {
-                return saldo = (saldo - quantia) - taxa;
+                return Saldo = (Saldo - quantia) - Taxa;
             }
             else
             {
