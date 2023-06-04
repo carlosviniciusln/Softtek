@@ -14,6 +14,9 @@ namespace Questao5.Domain.Handlers
             _next = next;
         }
 
+        /// <summary>
+        /// Entrada para todas as requisições HTTP
+        /// </summary>
         public async Task InvokeAsync(HttpContext context)
         {
             try
@@ -26,6 +29,9 @@ namespace Questao5.Domain.Handlers
             }
         }
 
+        /// <summary>
+        /// Tratamento de exceptions com retorno em json indentado
+        /// </summary>
         private async Task HandleExceptionAsync<TResponse>(HttpContext context, Exception ex) where TResponse : Exception
         {
 
@@ -45,35 +51,26 @@ namespace Questao5.Domain.Handlers
             await context.Response.WriteAsync(json);
         }
 
+        /// <summary>
+        /// Constroi as mensagens personalizadas para cada tipo de erro.
+        /// </summary>
         private ErrorResponse BuildHttpErrorResponse(Exception ex)
         {
-            ErrorResponse response = new ErrorResponse();
-            CustomException customException = new CustomException();
-            switch (ex)
+            switch (ex.Message)
             {
-                case TipoMovimentacaoInvalidaException:
-                    response = customException.TipoMovimentacaoInvalidaResponse();
-                    break;
-                case ValorInvalidoException:
-                    response = customException.ValorInvalidoResponse();
-                    break;
-                case ContaMovimentacaoInvalidaException:
-                    response = customException.ContaMovimentacaoInvalidaResponse();
-                    break;
-                case ContaNaoInformadaException:
-                    response = customException.ContaNaoInformadaResponse();
-                    break;
-                case ValorNaoInformadoException:
-                    response = customException.ValorNaoInformadoResponse();
-                    break;
-                case TipoNaoInformadoException:
-                    response = customException.TipoNaoInformadoResponse();
-                    break;
+                case "TipoMovimentacaoInvalidaException":
+                    return new ErrorResponse((int)HttpStatusCode.BadRequest, CustomResponseMessages.Response2, "INVALID_TYPE");
+                case "ContaMovimentacaoInvalidaException":
+                    return new ErrorResponse((int)HttpStatusCode.NotFound, CustomResponseMessages.Response3, "INVALID_ACCOUNT");
+                case "ValorInvalidoException":
+                    return new ErrorResponse((int)HttpStatusCode.NotAcceptable, CustomResponseMessages.Response4, "INVALID_VALUE");
+                case "ContaMovimentacaoInativaException":
+                    return new ErrorResponse((int)HttpStatusCode.BadRequest, CustomResponseMessages.Response5, "INACTIVE_ACCOUNT");
+                case "ValidationNotMapped":
+                    return new ErrorResponse((int)HttpStatusCode.ExpectationFailed, ex.Message, "SERVER_ERROR");
                 default:
-                    response = customException.ServerErrorResponse();
-                    break;
+                    return new ErrorResponse((int)HttpStatusCode.InternalServerError, ex.Message, "SERVER_ERROR");
             }
-            return response;
         }
     }
 }

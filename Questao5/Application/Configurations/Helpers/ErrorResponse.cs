@@ -4,17 +4,15 @@
     {
         public int ErrorCode { get; set; }
         public string Message { get; set; }
+        public string ValidationError { get; set; }
         public DateTime TimeStamp { get; set; }
 
-        public ErrorResponse()
-        {
-        }
-
-        public ErrorResponse(int code, string message)
+        public ErrorResponse(int code, string message, string validationError)
         {
             ErrorCode = code;
             Message = message;
             TimeStamp = DateTime.Now;
+            ValidationError = validationError;
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿
 namespace Questao5.Domain.Commands.Responses
 {
-    public class RegistraMovimentacaoResponse
+    public class ResponseAccountMovementCommand
     {
         public Guid Id { get; set; }
     }
