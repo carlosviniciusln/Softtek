@@ -11,7 +11,7 @@ using System.Text.Json;
 
 namespace Questao5.Domain.Handlers.Movimento
 {
-    public class ContaCorrenteHandler : RequestAccountMovementCommand, IRequestHandler<RequestAccountMovementCommand, string>
+    public class ContaCorrenteHandler : RequestAccountMovementCommand, IRequestHandler<RequestAccountMovementCommand, ResponseAccountMovementCommand>
     {
         private readonly RulesValidation _validation = new RulesValidation();
 
@@ -25,7 +25,7 @@ namespace Questao5.Domain.Handlers.Movimento
             _dbMovimentoCommand = dbMovimentoCommand;
         }
 
-        public async Task<string> Handle(RequestAccountMovementCommand request, CancellationToken cancellationToken)
+        public async Task<ResponseAccountMovementCommand> Handle(RequestAccountMovementCommand request, CancellationToken cancellationToken)
         {
             var response = new ResponseAccountMovementCommand();
             response.Id = Guid.NewGuid();
@@ -43,7 +43,7 @@ namespace Questao5.Domain.Handlers.Movimento
                     addMovement(buildMovement(request, response));
                     /*5. Register idempotencia*/
                     addIdempotenciaAsync(convertIdempotencia(request, response));
-                    return await Task.FromResult(convertJson(response));
+                    return await Task.FromResult(response);
                 }
                 else
                 {
@@ -53,7 +53,7 @@ namespace Questao5.Domain.Handlers.Movimento
             else
             {
                 response.Id = Guid.Parse(previousResult.Resultado);
-                return await Task.FromResult(convertJson(response));
+                return await Task.FromResult(response);
             }
         }
 
@@ -88,18 +88,6 @@ namespace Questao5.Domain.Handlers.Movimento
                 Requisicao = jsonRequest,
                 Resultado = response2.Id.ToString()
             };
-        }
-
-        private string convertJson(ResponseAccountMovementCommand response)
-        {
-            var jsonOptions = new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-                WriteIndented = true
-            };
-            var json = JsonSerializer.Serialize(response, jsonOptions);
-            return json;
         }
 
         private async void addMovement(ResponseMovimentoCommand request)
